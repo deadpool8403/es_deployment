@@ -115,20 +115,20 @@ Dependencies
 ------------
 
 Java role is presumed as dependency:
-https://galaxy.ansible.com/lean_delivery/java
+java
 
 Example Playbook
 ----------------
 
 ### Installing elasticsearch 6.x version:
 ```yaml
-- name: Install Elasticsearch 6.x
+- name: Install Elasticsearch 7.x
   hosts: localhost
   roles:
-    - role: lean_delivery.java
-    - role: lean_delivery.elasticsearch
+    - role: java
+    - role: elasticsearch
   vars:
-    elastic_branch: 6
+    elastic_branch: 7
 ```
 
 ### Installing multi node solution with elasticsearch 6.x version:
@@ -139,7 +139,6 @@ Playbook structure:
 .
 ├── elastic_cluster_inventory
 ├── group_vars
-│   ├── all.yml
 │   ├── controller.yml
 │   └── dm.yml
 └── elastic_cluster.yml
@@ -155,6 +154,8 @@ node1
 node2
 node3
 node4
+node5
+node6
 
 [cluster:children]
 controller
@@ -173,7 +174,6 @@ es_config:
   node.data: false
   node.ingest: false
   discovery.zen.minimum_master_nodes: 2
-  discovery.zen.ping.unicast.hosts: '{{ cluster_list }}'
 ```
 
 group_vars/dm.yml:
@@ -186,7 +186,6 @@ es_config:
   node.master: true
   node.data: true
   discovery.zen.minimum_master_nodes: 2
-  discovery.zen.ping.unicast.hosts: '{{ cluster_list }}'
 ```
 
 elastic_cluster.yml:
@@ -198,14 +197,14 @@ elastic_cluster.yml:
     cluster_list: "{{ groups['cluster'] | map ('extract', hostvars, ['ansible_hostname']) |  join (',') }}"
 
   roles:
-   - role: lean_delivery.java
-   - role: lean_delivery.elasticsearch
+   - role: java
+   - role: elasticsearch
 
 - name: Install kibana on controller node
   hosts: controller
 
   roles:
-    - role: lean_delivery.kibana
+    - role: kibana
 ```
 
 License
