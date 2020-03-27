@@ -1,0 +1,21 @@
+---
+kibana_host: '{{ ansible_host }}'
+es_config:
+  node.name: '{{ ansible_hostname }}'
+  cluster.name: my_cluster
+  network.host: [_local_,_site_]
+  node.master: false
+  node.data: false
+  node.ingest: false
+  discovery.zen.minimum_master_nodes: 2
+  discovery.seed_hosts:
+    - 192.168.
+    - 192.168.
+    - 192.168.
+    - 192.168.
+    - 192.168.
+    - 192.168.
+  cluster.initial_master_nodes:
+    - node2
+    - node3
+    - node4

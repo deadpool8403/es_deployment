@@ -1,0 +1,15 @@
+---
+- name: Install elasticsearch and configure cluster
+  hosts: all
+  vars:
+    cluster_list: "{{ groups['cluster'] | map ('extract', hostvars, ['ansible_hostname']) |  join (',') }}"
+
+  roles:
+   - role: lean_delivery.java
+   - role: lean_delivery.elasticsearch
+
+- name: Install kibana on controller node
+  hosts: controller
+
+  roles:
+    - role: lean_delivery.kibana

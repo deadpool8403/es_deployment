@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: ansible-role-elasticsearch
+      elasticsearch_host: localhost
+      elastic_branch: 7

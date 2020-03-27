@@ -1,0 +1,64 @@
+---
+# Run all tests
+stages:
+  - lint
+  - deployment test
+
+before_script:
+  - export PY_COLORS=1
+  - rm -rf molecule/resources/provisioning
+  - rm -rf /tmp/molecule/plugins
+  - ansible --version
+  - molecule --version
+  - git clone https://github.com/lean-delivery/ansible-molecule-drivers.git molecule/resources/provisioning
+  - mkdir -p /tmp/molecule/plugins && git clone https://github.com/dw/mitogen.git /tmp/molecule/plugins/mitogen
+
+variables:
+  GET_SOURCES_ATTEMPTS: "5"
+
+Ansible lint:
+  stage: lint
+  before_script:
+    - git clone https://github.com/lean-delivery/ansible-lint-rules.git ~/ansible-lint-rules
+  script:
+    - ansible-lint --version
+    - yamllint . -c .yamllint
+    - ansible-lint . -c .ansible-lint
+  after_script:
+    - rm -rf ~/ansible-lint-rules
+  tags:
+    - aws
+
+Docker ansible-role-elasticsearch:
+  stage: deployment test
+  script:
+    - molecule test -s default
+  tags:
+    - aws
+
+AWS ansible-role-elasticsearch-7:
+  variables:
+    AWS_REGION: us-east-1
+  stage: deployment test
+  script:
+    - molecule test -s cloud-aws-direct-7
+  tags:
+    - aws
+
+AWS ansible-role-elasticsearch-6:
+  variables:
+    AWS_REGION: us-east-1
+  stage: deployment test
+  script:
+    - molecule test -s cloud-aws-direct-6
+  tags:
+    - aws
+
+EPC ansible-role-elasticsearch:
+  variables:
+    EPC_REGION: EPAM-BY2
+  stage: deployment test
+  script:
+    - molecule test -s cloud-epc-delegated
+  tags:
+    - delegated

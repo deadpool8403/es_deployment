@@ -1,0 +1,13 @@
+[controller]
+node1 ansible_host=192.168. ansible_user=root ansible_password=
+
+[dm]
+node2 ansible_host=192.168. ansible_user=root ansible_password=
+node3 ansible_host=192.168. ansible_user=root ansible_password=
+node4 ansible_host=192.168. ansible_user=root ansible_password=
+node5 ansible_host=192.168. ansible_user=root ansible_password=
+node6 ansible_host=192.168. ansible_user=root ansible_password=
+
+[cluster:children]
+controller
+dm
